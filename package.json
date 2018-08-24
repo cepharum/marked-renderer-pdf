@@ -1,0 +1,26 @@
+{
+  "name": "marked-renderer-pdf",
+  "version": "0.0.1",
+  "description": "an extensible PDF-renderer for marked markdown parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha test/**.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cepharum/marked-renderer-pdf.git"
+  },
+  "author": "Thomas Urban",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cepharum/marked-renderer-pdf/issues"
+  },
+  "homepage": "https://github.com/cepharum/marked-renderer-pdf#readme",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
+  },
+  "dependencies": {
+    "marked": "^0.5.0"
+  }
+}
