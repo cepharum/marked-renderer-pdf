@@ -4,6 +4,8 @@ Converts Markdown to PDF.
 
 This package contains a custom renderer for [marked](https://www.npmjs.com/package/marked) generating AST of parsed markdown document. This AST is then used to generate PDF documents with [pdfjs](https://www.npmjs.com/package/pdfjs).
 
+**This converter does not converting markdown to HTML, first, to be converted to PDF using some headless browser afterwards.** The conversion works offline. Due to either involved dependency working in a client's browser this tool might completely work in a client's browser, too, if this project's code is prepared for running in browser (basically requiring transpiling and some packaging).
+
 # Installation
 
 ```bash
