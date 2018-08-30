@@ -2,7 +2,7 @@
   "name": "marked-renderer-pdf",
   "version": "0.0.1",
   "description": "an extensible PDF-renderer for marked markdown parser",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "nyc mocha test/**.js"
   },
