@@ -30,7 +30,9 @@ This is _some_ **simple _test_** text.
   4. and has to deal with continuation in
 * superordinated lists  
   with more items.
-  
+
+## List of Employees
+
 | first name | last name |
 | --- | --- |
 | John | Doe |
@@ -38,7 +40,9 @@ This is _some_ **simple _test_** text.
 `;
 
 
-Converter.convertString( md )
+Converter.convertString( md, {
+	smartyPants: true,
+} )
 	.then( doc => {
 		doc.pipe( File.createWriteStream( "test.pdf" ) );
 
