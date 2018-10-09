@@ -59,7 +59,27 @@ This library relies on markdown flavours supported by [marked](https://www.npmjs
  
 # Browser Support
 
-This library links [marked](https://www.npmjs.com/package/marked) with [pdfjs](https://www.npmjs.com/package/pdfjs). Either of these tools work in browser. This library is relying on ES6 syntax for simplified coding. Thus, using BabelJS or similar it should be possible to run the whole conversion in a browser.
+This converter works in browser. Run
+
+```bash
+npm run build-browser
+```
+
+a folder `/dist` is generated containing an HTML document providing sandbox for testing conversion live in browser. In addition there is a file `main.js` providing whole converter:
+
+```html
+<a id="some-link"></a>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript">
+MarkdownToPdf
+	.convertString( "some markdown" )
+	.then( function( pdf ) { 
+		document.getElementById( "some-link" ).href = URL.createObjectURL( new Blob( [pdf], {
+			type: "application/pdf",
+		} ) );
+	} );
+</script>
+```
 
 # License
 
