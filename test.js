@@ -94,7 +94,7 @@ sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cu
 
 ## To **dos** and _planned_ features
 
-1. Support headings.
+1. ~Support headings.~
 1. ~Support tables.~
 2. Support blockquotes.
 3. Support fenced blocks.
@@ -102,7 +102,7 @@ sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cu
    2. _Optional:_ Contribute to add support for fenced divs in __marked__.
 4. Support mermaid for injecting diagrams into PDFs.
 4. Add custom code language like mermaid to describe and render printable forms.
-4. Showing ellipsis ...
+4. ~Showing ellipsis ...~
 
 ### List of Involved Employees
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Example Markdown To PDF Conversion</title>
+		<style type="text/css">
+			body {
+				font: normal 12pt/1.5 sans-serif;
+				margin: 0;
+			}
+
+			.wrapper {
+				display: flex;
+				flex-direction: column;
+				justify-content: stretch;
+				height: 100vh;
+			}
+
+			.title {
+				font: normal 2rem sans-serif;
+				text-align: center;
+				margin: 1rem;
+			}
+
+			.intro {
+				text-align: center;
+				margin: 1rem;
+			}
+
+			.split {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				flex: 10 1 auto;
+			}
+
+			.editor {
+				position: relative;
+				overflow: hidden;
+				margin-left: 1rem;
+				margin-right: 1rem;
+				flex: 1 1 auto;
+			}
+
+			.editor textarea {
+				display: block;
+				width: calc( 100% - 2px );
+				height: calc( 100% - 2px );
+				box-sizing: border-box;
+			}
+
+			.preview {
+				margin-left: 1rem;
+				margin-right: 1rem;
+				flex: 1 1 auto;
+			}
+
+			.preview iframe {
+				border: 1px solid black;
+				width: calc( 100% - 2px );
+				height: calc( 100% - 2px );
+				box-sizing: border-box;
+			}
+
+			.panel {
+				text-align: center;
+				margin: 1rem;
+			}
+		</style>
+		<script type="text/javascript">
+			function convert() {
+				const editor = document.getElementById( "editor" );
+
+				editor.focus();
+
+				MarkdownToPDF.convertString( editor.value )
+					.then( function( pdf ) {
+						document.getElementById( "preview" ).src = URL.createObjectURL( new Blob( [pdf], {
+							type: "application/pdf",
+						} ) );
+					} );
+			}
+
+			window.onload = function() {
+				document.getElementById( "convert" ).onclick = convert;
+			};
+		</script>
+	</head>
+	<body>
+		<div class="wrapper">
+			<h1 class="title">Converting Markdown to PDF</h1>
+			<div class="intro">
+				Enter some Markdown code and click button <b>Convert</b> or press <b>Alt+Shift+S</b> to convert the markdown to PDF.
+			</div>
+			<div class="split">
+				<div class="editor">
+					<textarea id="editor" placeholder="Put your markdown here!"></textarea>
+				</div>
+				<div class="preview">
+					<iframe id="preview"></iframe>
+				</div>
+			</div>
+			<div class="panel">
+				<button accesskey="S" id="convert">Convert!</button>
+			</div>
+		</div>
+	</body>
+</html>

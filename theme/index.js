@@ -29,8 +29,10 @@
 "use strict";
 
 const PDF = require( "pdfjs" );
-const merge = require( "../lib/merge" );
-const TextStyle = require( "../lib/text-style" );
+const merge = require( "../lib/util/merge" );
+const PdfStateTracker = require( "../lib/util/tracker" );
+const BoxModel = require( "../lib/util/box" );
+const TextStyle = require( "../lib/util/text-style" );
 
 
 /**
@@ -66,17 +68,14 @@ const Fonts = Object.freeze( {
  * @type {object}
  */
 const DefaultOptions = {
-	borders: {
-		top: 2.5,
-		left: 2.5,
-		right: 2.5,
-		bottom: 2.5,
-	},
 	style: {
 		font: {
 			proportional: Fonts.sansSerif,
 			monospace: Fonts.monospace,
 			symbol: Fonts.symbol,
+		},
+		document: {
+			padding: 2 * PDF.cm,
 		},
 		text: {
 			fontFamily: {
@@ -95,7 +94,7 @@ const DefaultOptions = {
 			paddingBottom: 0.3 * PDF.cm,
 		},
 		paragraph: {
-			paddingBottom: ( index, num ) => ( index < num - 1 ? 0.3 * PDF.cm : 0 ),
+			marginTop: ( index, num ) => ( index < num - 1 ? 0.3 * PDF.cm : 0 ),
 		},
 		list: {
 			item: {
@@ -198,16 +197,30 @@ function filterObject( source, exclude = [] ) {
  */
 class DefaultTheme {
 	/**
-	 * @param {PDF.Document} document document to be populated by theme
 	 * @param {object} options theme customizations
 	 */
-	constructor( document, options = {} ) {
-		if ( !document || !( document instanceof PDF.Document ) ) {
-			throw new TypeError( "invalid PDF document" );
-		}
-
+	constructor( options = {} ) {
 		options = merge( {}, DefaultOptions, options );
 
+
+		let { document } = options;
+		if ( !document || !( document instanceof PDF.Document ) ) {
+			document = new PDF.Document( new BoxModel( options.style.document ) );
+		}
+
+		Object.defineProperties( this, {
+			/**
+			 * Refers to currently generated PDF document.
+			 *
+			 * @name DefaultTheme#document
+			 * @property {PDF.Document}
+			 * @readonly
+			 */
+			document: { value: document },
+		} );
+
+
+		const tracker = new PdfStateTracker( this );
 
 		/**
 		 * Manages LIFO of contextual PDF generation fragments.
@@ -234,15 +247,6 @@ class DefaultTheme {
 
 		Object.defineProperties( this, {
 			/**
-			 * Refers to currently generated PDF document.
-			 *
-			 * @name DefaultTheme#document
-			 * @property {PDF.Document}
-			 * @readonly
-			 */
-			document: { value: document },
-
-			/**
 			 * Exposes customizations provided on constructing theme.
 			 *
 			 * @name DefaultTheme#options
@@ -250,6 +254,16 @@ class DefaultTheme {
 			 * @readonly
 			 */
 			options: { value: Object.freeze( options ) },
+
+			/**
+			 * Exposes manager instance tracking state of generated PDF
+			 * document.
+			 *
+			 * @name DefaultTheme#tracker
+			 * @property {PdfStateTracker}
+			 * @readonly
+			 */
+			tracker: { value: tracker },
 
 			/**
 			 * Provides storage for contextual information to be used by theme
@@ -477,10 +491,20 @@ class DefaultTheme {
 	 * @returns {void}
 	 */
 	enterParagraph( itemIndex, numItemsInLevel ) {
+		const boxStyle = new BoxModel( this.options.style.paragraph, this, itemIndex, numItemsInLevel );
+
+		if ( boxStyle.marginTop > 0 && !this.tracker.isAtTopOfPage && !this.tracker.isEmptyFragment( this.context ) ) {
+			console.log( this.context.constructor.name, this.context._pending.length );
+			this.context.cell( {
+				paddingTop: boxStyle.marginTop,
+			} );
+		}
+
+		const context = this.context.cell( boxStyle ).text();
+		context.$boxStyle = boxStyle;
+
 		this.enterContainer( "paragraph" );
-		this.enterContext( this.context.cell( {
-			paddingBottom: this._V( this.options.style.paragraph.paddingBottom, itemIndex, numItemsInLevel ),
-		} ).text() );
+		this.enterContext( context );
 	}
 
 	/**
@@ -490,8 +514,20 @@ class DefaultTheme {
 	 * @returns {void}
 	 */
 	leaveParagraph() {
+		const boxStyle = this.context.$boxStyle;
+
 		this.leaveContainer();
 		this.leaveContext();
+
+		if ( boxStyle.marginBottom > 0 ) {
+			if ( this.tracker.heightFitsOnPage( boxStyle.marginBottom ) ) {
+				this.context.cell( {
+					paddingBottom: boxStyle.marginBottom,
+				} );
+			} else {
+				this.document.pageBreak();
+			}
+		}
 	}
 
 	/**
