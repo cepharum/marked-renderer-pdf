@@ -59,27 +59,35 @@ This library relies on markdown flavours supported by [marked](https://www.npmjs
  
 # Browser Support
 
-This converter works in browser. Run
+This converter works in browser without any server-side backend involved. 
 
-```bash
-npm run build-browser
-```
-
-a folder `/dist` is generated containing an HTML document providing sandbox for testing conversion live in browser. In addition there is a file `main.js` providing whole converter:
+You may use a published archive or build one yourself. In either case you might use the converter in an HTML document like this:
 
 ```html
 <a id="some-link"></a>
-<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="path/to/markdown-to-pdf/converter.min.js"></script>
 <script type="text/javascript">
 MarkdownToPdf
-	.convertString( "some markdown" )
+	.convertString( "some **structured _text_** using markdown syntax" )
 	.then( function( pdf ) { 
-		document.getElementById( "some-link" ).href = URL.createObjectURL( new Blob( [pdf], {
+		const link = document.getElementById( "some-link" );
+
+		link.href = URL.createObjectURL( new Blob( [pdf], {
 			type: "application/pdf",
 		} ) );
 	} );
 </script>
 ```
+
+## Build It Yourself
+
+Install the package as described before. Then run
+
+```bash
+npm run build-browser
+```
+
+This script is creating a folder `/dist` containing an HTML document providing sandbox for testing conversion live in browser. In addition there is a file `main.js` which is equal to the file `converter.min.js` in a deployed version.
 
 # License
 
