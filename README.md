@@ -81,7 +81,9 @@ MarkdownToPdf
 
 ## Build It Yourself
 
-Install the package as described before. Then run
+Checking out the project from git is required to access the script building version for browser yourself. 
+
+Open CLI in folder of your working copy of project and run:
 
 ```bash
 npm run build-browser
