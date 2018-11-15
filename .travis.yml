@@ -4,7 +4,7 @@ node_js:
   - "10"
 before_deploy:
   - npm run build-browser
-  - sed -i -e "s/%%version%%/$TRAVIS_TAG/" dist/package.json
+  - sed -i -e "s/%%version%%/${TRAVIS_TAG#v}/" dist/package.json
   - cd dist
 deploy:
   provider: npm
