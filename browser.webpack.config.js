@@ -3,6 +3,7 @@
 const Path = require( "path" );
 const WebPack = require( "webpack" );
 const HtmlWebPackPlugin = require( "html-webpack-plugin" );
+const CopyWebPackPlugin = require( "copy-webpack-plugin" );
 
 module.exports = {
 	mode: "production",
@@ -21,6 +22,9 @@ module.exports = {
 		new HtmlWebPackPlugin( {
 			template: "./browser/example.html",
 		} ),
+		new CopyWebPackPlugin( [{
+			from: "./browser/assets",
+		}] ),
 	],
 	devServer: {
 		contentBase: "./dist",

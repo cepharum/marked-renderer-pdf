@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/cepharum/marked-renderer-pdf#readme",
   "devDependencies": {
+    "copy-webpack-plugin": "^4.6.0",
     "eslint": "^5.4.0",
     "eslint-config-cepharum": "^1.0.7",
     "eslint-plugin-promise": "^4.0.0",
