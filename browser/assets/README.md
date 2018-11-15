@@ -10,7 +10,9 @@ MIT
 
 ## Installation 
 
-npm i marked-renderer-pdf-browser
+```bash
+npm install marked-renderer-pdf-browser
+```
 
 ## Usage
 
