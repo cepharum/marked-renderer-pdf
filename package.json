@@ -1,6 +1,6 @@
 {
   "name": "marked-renderer-pdf",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "an extensible PDF-renderer for marked markdown parser",
   "main": "lib/index.js",
   "scripts": {
