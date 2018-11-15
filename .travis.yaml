@@ -1,0 +1,11 @@
+language: node_js
+before_deploy:
+  - npm install
+  - npm run build-browser
+  - sed -i -e "s/%%version%%/$TRAVIS_TAG/" dist/package.json
+  - cd dist
+deploy:
+  provider: npm
+  email: $NPM_LOGIN
+  skip_cleanup: true
+  api_key: $NPM_TOKEN

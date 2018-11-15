@@ -1,4 +1,16 @@
 {
 	"name": "marked-renderer-pdf-browser",
-	"description": "build of marked-renderer-pdf for use in browsers"
+  	"main": "main.js",
+	"description": "build of marked-renderer-pdf for use in browsers",
+  	"version": "%%version%%",
+  	"repository": {
+	"type": "git",
+	"url": "git+https://github.com/cepharum/marked-renderer-pdf.git"
+  	},
+  	"author": "Thomas Urban",
+  	"license": "MIT",
+  	"bugs": {
+		"url": "https://github.com/cepharum/marked-renderer-pdf/issues"
+  	},
+  	"homepage": "https://github.com/cepharum/marked-renderer-pdf#readme"
 }
