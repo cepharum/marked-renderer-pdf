@@ -4,10 +4,12 @@ node_js:
   - "10"
 before_deploy:
   - npm run build-browser
-  - sed -i -e "s/%%version%%/0.0.3/" dist/package.json
+  - sed -i -e "s/%%version%%/$TRAVIS_TAG/" dist/package.json
   - cd dist
 deploy:
   provider: npm
   email: $NPM_LOGIN
   skip_cleanup: true
   api_key: $NPM_TOKEN
+  on:
+    tags: true
