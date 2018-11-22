@@ -14,6 +14,7 @@ module.exports = {
 	output: {
 		path: Path.resolve( __dirname, "dist" ),
 		library: "MarkdownToPDF",
+		libraryTarget: "umd",
 	},
 	plugins: [
 		new WebPack.DefinePlugin( {
