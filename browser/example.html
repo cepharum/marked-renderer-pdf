@@ -78,7 +78,8 @@
 						document.getElementById( "preview" ).src = URL.createObjectURL( new Blob( [pdf], {
 							type: "application/pdf",
 						} ) );
-					} );
+					} )
+					.catch( console.error );
 			}
 
 			window.onload = function() {

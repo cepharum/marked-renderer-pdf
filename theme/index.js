@@ -96,6 +96,13 @@ const DefaultOptions = {
 		paragraph: {
 			marginTop: ( index, num ) => ( index < num - 1 ? 0.3 * PDF.cm : 0 ),
 		},
+		code: {
+			marginTop: ( index, num ) => ( index < num - 1 ? 0.3 * PDF.cm : 0 ),
+		},
+		blockquote: {
+			marginTop: ( index, num ) => ( index < num - 1 ? 0.3 * PDF.cm : 0 ),
+			paddingLeft: PDF.cm,
+		},
 		list: {
 			item: {
 				indent: 0.8 * PDF.cm,
@@ -490,7 +497,6 @@ class DefaultTheme {
 		const boxStyle = new BoxModel( this.options.style.paragraph, this, itemIndex, numItemsInLevel );
 
 		if ( boxStyle.marginTop > 0 && !this.tracker.isAtTopOfPage && !this.tracker.isEmptyFragment( this.context ) ) {
-			console.log( this.context.constructor.name, this.context._pending.length );
 			this.context.cell( {
 				paddingTop: boxStyle.marginTop,
 			} );
@@ -781,6 +787,98 @@ class DefaultTheme {
 	leaveHeading() {
 		this.leaveContext();
 		this.leaveContainer();
+	}
+
+	/**
+	 * Marks entering context of code block usually containing single child
+	 * element with all raw content as contained in code block.
+	 *
+	 * @param {string} language language information appended after opening marker of code block
+	 * @param {int} itemIndex 0-based index of paragraph into list of items on same hierarchical level as the paragraph itself
+	 * @param {int} numItemsInLevel number of items in same hierarchical level as paragraph to be entered
+	 * @returns {void}
+	 */
+	enterCodeBlock( language, itemIndex, numItemsInLevel ) {
+		const boxStyle = new BoxModel( this.options.style.code, this, itemIndex, numItemsInLevel );
+
+		if ( boxStyle.marginTop > 0 && !this.tracker.isAtTopOfPage && !this.tracker.isEmptyFragment( this.context ) ) {
+			this.context.cell( {
+				paddingTop: boxStyle.marginTop,
+			} );
+		}
+
+		const context = this.context.cell( boxStyle ).text();
+		context.$boxStyle = boxStyle;
+
+		this.enterContainer( "code" );
+		this.enterContext( context );
+	}
+
+	/**
+	 * Marks leaving previously entered context of code block.
+	 *
+	 * @returns {void}
+	 */
+	leaveCodeBlock() {
+		const boxStyle = this.context.$boxStyle;
+
+		this.leaveContainer();
+		this.leaveContext();
+
+		if ( boxStyle.marginBottom > 0 ) {
+			if ( this.tracker.heightFitsOnPage( boxStyle.marginBottom ) ) {
+				this.context.cell( {
+					paddingBottom: boxStyle.marginBottom,
+				} );
+			} else {
+				this.document.pageBreak();
+			}
+		}
+	}
+
+	/**
+	 * Marks entering context of block quote containing any other kind content.
+	 *
+	 * @param {int} itemIndex 0-based index of paragraph into list of items on same hierarchical level as the paragraph itself
+	 * @param {int} numItemsInLevel number of items in same hierarchical level as paragraph to be entered
+	 * @returns {void}
+	 */
+	enterBlockQuote( itemIndex, numItemsInLevel ) {
+		const boxStyle = new BoxModel( this.options.style.blockquote, this, itemIndex, numItemsInLevel );
+
+		if ( boxStyle.marginTop > 0 && !this.tracker.isAtTopOfPage && !this.tracker.isEmptyFragment( this.context ) ) {
+			this.context.cell( {
+				paddingTop: boxStyle.marginTop,
+			} );
+		}
+
+		const context = this.context.cell( boxStyle ).text();
+		context.$boxStyle = boxStyle;
+
+		this.enterContainer( "blockquote" );
+		this.enterContext( context );
+	}
+
+	/**
+	 * Marks leaving previously entered context of block quote.
+	 *
+	 * @returns {void}
+	 */
+	leaveBlockQuote() {
+		const boxStyle = this.context.$boxStyle;
+
+		this.leaveContainer();
+		this.leaveContext();
+
+		if ( boxStyle.marginBottom > 0 ) {
+			if ( this.tracker.heightFitsOnPage( boxStyle.marginBottom ) ) {
+				this.context.cell( {
+					paddingBottom: boxStyle.marginBottom,
+				} );
+			} else {
+				this.document.pageBreak();
+			}
+		}
 	}
 
 	/**
