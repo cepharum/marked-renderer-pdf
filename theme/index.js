@@ -475,10 +475,6 @@ class DefaultTheme {
 	 * @returns {void}
 	 */
 	text( text, itemIndex, numItemsInLevel ) { // eslint-disable-line no-unused-vars
-		if ( this.isInContainer( "table" ) && !this.isInContainer( "code" ) ) {
-			text = text.replace( /<br\s*\/?>/ig, "\n" );
-		}
-
 		this.context.add( text, this.containerContext.textStyle.overload() );
 	}
 
